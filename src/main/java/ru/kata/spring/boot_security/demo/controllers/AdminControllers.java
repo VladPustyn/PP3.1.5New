@@ -99,8 +99,10 @@ public class AdminControllers {
 
         personValidator.validate(person, bindingResult);
 
+        Person otherPerson = personService.findByUsername(person.getUsername());
+        int otherPersonId = (otherPerson != null) ? otherPerson.getId() : 0;
 
-        if (bindingResult.hasErrors()) {
+        if (bindingResult.hasErrors() && id != otherPersonId) {
             return "edit";
         }
 
@@ -115,5 +117,4 @@ public class AdminControllers {
         personService.updatePersonWithRoles(person, id, roles);
         return "redirect:/admin";
     }
-
 }

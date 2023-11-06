@@ -1,0 +1,15 @@
+insert into users  (id,age, password, phone_number, username)
+values (3, 18, "$2a$12$xx6OSdCmSZA8hCwbwxJjTOfJXF6mwTkFzfach1BD4s7Vr2PN5cUtW", "89162776509","admin");
+
+insert into user_roles(user_id, role_id)
+values (3,1);
+
+insert into user_roles(user_id, role_id)
+values (3,2);
+
+
+insert into users  (id,age, password, phone_number, username)
+values (4, 40, "$2a$12$rKd7be3diud0Ox2aLI7h.e2Y93IAqwlMpnYiDNBLwnfr1DVlDu4F6", "89162777777","user");
+
+insert into user_roles(user_id, role_id)
+values (4,2);

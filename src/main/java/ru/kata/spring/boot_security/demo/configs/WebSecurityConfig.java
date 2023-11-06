@@ -7,20 +7,23 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import ru.kata.spring.boot_security.demo.service.PersonService;
+import ru.kata.spring.boot_security.demo.service.PersonDetail;
+import ru.kata.spring.boot_security.demo.service.PersonDetailImpl;
+import ru.kata.spring.boot_security.demo.service.PersonServiceImpl;
 
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private PersonService personService;       //TODO
+    private PersonDetail personDetail;       //TODO
     private final SuccessUserHandler successUserHandler;
 
     @Autowired
-    public WebSecurityConfig(PersonService personService, SuccessUserHandler successUserHandler) {     //TODO
-        this.personService = personService;
+    public WebSecurityConfig(PersonDetail personDetail, SuccessUserHandler successUserHandler) {     //TODO
+        this.personDetail = personDetail;
         this.successUserHandler = successUserHandler;
     }
 
@@ -29,37 +32,19 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                 .antMatchers("/", "/index").permitAll()
-                .antMatchers("/admin").hasRole("ADMIN")
-                .antMatchers("/user").hasRole("USER")
+                .antMatchers("/admin/**").hasRole("ADMIN")
+                .antMatchers("/user/**").hasRole("USER")
                 .anyRequest().authenticated()
                 .and()
                 .formLogin().successHandler(successUserHandler)    // Из класса SucсessUserHandler там перенаправит его в завис от роли
                 .permitAll()
                 .and()
                 .logout()
-                .permitAll();
+                .permitAll()
+                .and()
+                .logout().logoutUrl("/logout").logoutSuccessUrl("/login");
     }
 
-    // аутентификация inMemory
-//    @Bean
-//    @Override
-//    public UserDetailsService userDetailsService() {
-//        UserDetails user =
-//                User.builder()
-//                        .username("user")
-//                        .password("{bcrypt}$2a$12$qNXNq8mcwncLitinCcsCWu/kL0TGlBQmVGOZQ0FRu7bLE2dDpZuya")
-//                        .roles("USER")
-//                        .build();
-//
-//        UserDetails admin =
-//                User.builder()
-//                        .username("admin")
-//                        .password("{bcrypt}$2a$12$qNXNq8mcwncLitinCcsCWu/kL0TGlBQmVGOZQ0FRu7bLE2dDpZuya")
-//                        .roles("ADMIN", "USER")
-//                        .build();
-//
-//        return new InMemoryUserDetailsManager(user, admin);
-//    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -70,7 +55,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public DaoAuthenticationProvider daoAuthenticationProvider() {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
         authenticationProvider.setPasswordEncoder(passwordEncoder());
-        authenticationProvider.setUserDetailsService(personService);
+        authenticationProvider.setUserDetailsService((UserDetailsService) personDetail);
         return authenticationProvider;
     }
 

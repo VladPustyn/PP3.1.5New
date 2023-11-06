@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit profile</title>
+</head>
+<body>
+<a href="/logout">Logout</a>
+
+<form th:method="PATCH" th:action="@{/admin/{id}(id=${person.getId()})}" th:object="${person}">
+
+
+    <label for="username">Enter username: </label>
+    <input type="text" th:field="*{username}" id="username"/>
+    <div style="color:red" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Name error</div>
+    <br/>
+    <label for="password">Enter password: </label>
+    <input type="text" th:field="*{password}" id="password"/>
+    <br/>
+    <label for="age">Enter age: </label>
+    <input type="number" th:field="*{age}" id="age"/>
+    <br/>
+    <label for="phoneNumber">Enter phone number: </label>
+    <input type="text" th:field="*{phoneNumber}" id="phoneNumber"/>
+
+    <br/>
+
+    <input type="checkbox" id="admin" name="admin" value="ROLE_ADMIN">
+    <label for="admin"> Admin </label>
+    <br>
+    <input type="checkbox" id="user" name="user" value="ROLE_USER">
+    <label for="user"> User </label>
+    <br>
+
+    <input type="submit" value="Update"/>
+</form>
+</body>
+</html>

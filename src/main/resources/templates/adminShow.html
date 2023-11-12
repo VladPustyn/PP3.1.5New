@@ -203,16 +203,14 @@
                                                 </form>
                                             </div>
 
-                                            <!--                                            <button type="button" class="btn btn-info" data-toggle="modal"-->
-                                            <!--                                                    th:data-target="'#exampleModal' + ${person.id}">Edit-->
-                                            <!--                                            </button>-->
+
 
                                             <td>
-                                                <!--                                                <form th:method="DELETE" th:action="@{/admin/delete(id=${person.id})}">-->
+
                                                 <button type="button" class="btn btn-danger" data-toggle="modal"
                                                         th:data-target="'#deleteModal' + ${person.id}">Delete
                                                 </button>
-                                                <!--                                                </form>-->
+
                                             </td>
 
                                             <div class="modal fade" th:id="'deleteModal' + ${person.id}"

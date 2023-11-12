@@ -22,6 +22,7 @@ public class UserControllers {
       Person person = personService.findByUsername(principal.getName());
       model.addAttribute("person", person);
 
+
         return "userInfo";
     }
 

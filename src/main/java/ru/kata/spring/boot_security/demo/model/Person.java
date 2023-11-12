@@ -4,6 +4,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.util.Collection;
@@ -23,8 +25,10 @@ public class Person implements UserDetails  {
     private String username;
 
     @Column (name = "age")
+    @Min(value = 1, message = "Возраст должен быть больше или равен 1")
+    @Max(value = 100, message = "Возраст должен быть до 100")
     private int age;
-    @NotEmpty(message = "Поле не может быть пустым")
+
     @Column(name = "password")
     private String password;
 

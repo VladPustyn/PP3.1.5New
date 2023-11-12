@@ -1,21 +1,186 @@
-<!DOCTYPE html>
+
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>User Information</title>
 </head>
 <body>
-<a href="/logout">Logout</a>
-<h1>User Information</h1>
-<p>Id : <span th:text="${person.getId()}"></span></p>
-<p>User name: <span th:text="${person.username}"></span></p>
-<p>Age: <span th:text="${person.age}"></span></p>
-<p>Phone number: <span th:text="${person.phoneNumber}"></span></p>
+<!-- Required meta tags -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-<span th:text="'Roles: '"></span>
-<div th:each="role : ${person.roles}" th:text="${role.name}"></div>
+<!-- Bootstrap CSS -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<meta charset="UTF-8">
 
 
-<div/>
+<nav class="navbar fixed-top navbar-white bg-dark">
+    <h3><span class="badge badge-dark">
+
+                <td th:text="${person.username + ' with roles: USER'}"></td>
+
+    </span></h3>
+
+
+    <div class="d-flex flex-reverse">
+        <a href="/logout"><span class="text-secondary">Logout</span></a>
+    </div>
+</nav>
+
+
+<!--                                                    Общий контейнер всей страницы-->
+<div class="container-fluid">
+
+    <!--                                                    колонка слева-->
+    <div class="row">
+        <div class="col-md-1">
+            <nav class="nav flex-column nav-pills">
+
+
+
+                <a class="nav-link active" href="#!">User</a>
+            </nav>
+        </div>
+
+        <!--                                    колонка справа -->
+        <div class="col-xl-11">
+            <h1>User information-page</h1>
+
+
+            <div class="tab-content">
+
+                <div role="tabpanel" class="tab-pane active" id="allUser">
+                    <div class="containerTable">
+                        <div class="card">
+                            <div class="card-body">
+                                About user
+                            </div>
+                        </div>
+
+
+                        <div class="outher-container">
+                            <div class="table-container">
+                                <table class="table table-striped ">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col">ID</th>
+                                        <th scope="col">Age</th>
+                                        <th scope="col">Username</th>
+                                        <th scope="col">Phone number</th>
+                                        <th scope="col">Role</th>
+
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="person : ${person}">
+                                        <td th:text="${person.id}" style="padding-right: 10px;"></td>
+                                        <td th:text="${person.age}" style="padding-right: 20px;"></td>
+                                        <td th:text="${person.username}" style="padding-right: 10px;"></td>
+                                        <td th:text="${person.phoneNumber}" style="padding-right: 10px;"></td>
+                                        <td>
+                                            <ul class="list-inline">
+                                                <li class="list-inline-item" th:each="role : ${person.roles}"
+                                                    th:text="${role.name}"></li>
+                                            </ul>
+                                        </td>
+
+
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
 </body>
 </html>
+
+<style>
+    .container-fluid {
+        margin-top: 50px;
+    }
+
+
+    body {
+        background-color: #f0f0f0; /* Серый фон */
+    }
+
+    .row {
+
+    }
+
+    .custom-select[multiple] {
+        height: 60px;
+    }
+
+    .outher-container {
+        background-color: white;
+        padding: 30px;
+
+    }
+
+    .containerNewUser {
+        background-color: white;
+        /*border: 1px solid gray;*/
+    }
+
+    .outherNewUser-container {
+        background-color: white;
+
+
+        margin-right: 600px;
+        margin-left: 600px;
+
+    }
+
+    .formContainer {
+        margin-top: 30px;
+        margin-bottom: 30px;
+
+    }
+
+    .col-md-1 {
+        padding-bottom: 100%;
+        padding-left: 0;
+        padding-right: 0;
+        padding-top: 1%;
+        background-color: white;
+    }
+
+    .col-xl-11 {
+        padding: 1%;
+    }
+
+    .card {
+        background-color: #f0f0f0;
+    }
+
+    .card-body {
+        font-weight: 600;
+        font-size: 1.1rem;
+    }
+
+
+</style>

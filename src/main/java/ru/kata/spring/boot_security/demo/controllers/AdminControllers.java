@@ -17,9 +17,8 @@ import ru.kata.spring.boot_security.demo.util.PersonValidator;
 
 import javax.validation.Valid;
 import java.security.Principal;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/admin")
@@ -35,16 +34,59 @@ public class AdminControllers {
     private PersonValidator personValidator;
 
     @GetMapping()
-    public String show(Model model) {
+    public String show(Model model, Principal principal) {
+        model.addAttribute("person", new Person());
+
+
+        Person adminPerson = personService.findByUsername(principal.getName());
+        model.addAttribute("adminPerson", adminPerson);
+
+
+        List<String> roleRaw = adminPerson.getRoles().stream()
+                .map(Role::getName).collect(Collectors.toList());
+
+        System.out.println(roleRaw);
+
+        List<String> roleNames = new ArrayList<>();
+
+
+            if (roleRaw.contains("ROLE_ADMIN")) {
+                roleNames.add("ADMIN");
+            }
+            if (roleRaw.contains("ROLE_USER")) {
+                roleNames.add("USER");
+            }
+
+        model.addAttribute("roleNames", roleNames);
+
+
         List<Person> persons = personService.listPerson(); // Получение списка пользователей
-        model.addAttribute("persons", persons); // Передача списка пользователей в представлениеъ
+        model.addAttribute("persons", persons); // Передача списка пользователей в представление
         return "adminShow";
     }
 
     @GetMapping("/user")
     public String showAdminInfo(Model model, Principal principal) {
+
         Person person = personService.findByUsername(principal.getName());
         model.addAttribute("person", person);
+
+        List<String> roleRaw = person.getRoles().stream()
+                .map(Role::getName).collect(Collectors.toList());
+
+        System.out.println(roleRaw);
+
+        List<String> roleNames = new ArrayList<>();
+
+
+        if (roleRaw.contains("ROLE_ADMIN")) {
+            roleNames.add("ADMIN");
+        }
+        if (roleRaw.contains("ROLE_USER")) {
+            roleNames.add("USER");
+        }
+
+        model.addAttribute("roleNames", roleNames);
 
         return "adminUser";
     }
@@ -52,27 +94,31 @@ public class AdminControllers {
     @GetMapping("/new")
     public String newUser(Model model) {
         model.addAttribute("person", new Person());
-        return "adminNew";
+
+        return "adminShow";
     }
 
 
     @PostMapping("/create")
-    public String createPersonWithRoles(@ModelAttribute("person") @Valid Person person,
+    public String createPersonWithRoles(@ModelAttribute("person") Person person,
                                         BindingResult bindingResult,
-                                        @RequestParam(name = "admin", required = false) String admin,
-                                        @RequestParam(name = "user", required = false) String user) {
+                                        @RequestParam(name = "selectedRoles", required = false) List<String> selectedRoles) {
         personValidator.validate(person, bindingResult);
 
         if (bindingResult.hasErrors()) {
-            return "adminNew";
+            return "adminShow";
         }
 
         Set<Role> roles = new HashSet<>();
-        if (admin != null) {
-            roles.add(roleService.findByName("ROLE_ADMIN"));
-        }
-        if (user != null) {
-            roles.add(roleService.findByName("ROLE_USER"));
+
+        for (String roleName : selectedRoles) {
+            if (roleName.contains("ADMIN")) {
+                roles.add(roleService.findByName("ROLE_ADMIN"));
+            }
+            if (roleName.contains("USER")) {
+                roles.add(roleService.findByName("ROLE_USER"));
+            }
+
         }
         personService.savePersonWithRoles(person, roles);
         return "redirect:/admin";
@@ -87,15 +133,19 @@ public class AdminControllers {
 
     @GetMapping("/{id}/edit")
     public String edit(@PathVariable("id") int id, Model model) {
+
+        Person person = personService.findById(id);
+        System.out.println("!!!!!");
+        System.out.println(person.toString());
+        System.out.println("!!!!!");
         model.addAttribute("person", personService.findById(id));
-        return "edit";
+        return "adminShow";
     }
 
     @PatchMapping("/{id}")
     public String update(@ModelAttribute("person") @Valid Person person, @PathVariable("id") int id,
                          BindingResult bindingResult,
-                         @RequestParam(name = "admin", required = false) String admin,
-                         @RequestParam(name = "user", required = false) String user) {
+                         @RequestParam(name = "selectedRoles", required = false) List<String> selectedRoles) {
 
         personValidator.validate(person, bindingResult);
 
@@ -107,11 +157,14 @@ public class AdminControllers {
         }
 
         Set<Role> roles = new HashSet<>();
-        if (admin != null) {
-            roles.add(roleService.findByName("ROLE_ADMIN"));
-        }
-        if (user != null) {
-            roles.add(roleService.findByName("ROLE_USER"));
+        for (String roleName : selectedRoles) {
+            if (roleName.contains("ADMIN")) {
+                roles.add(roleService.findByName("ROLE_ADMIN"));
+            }
+            if (roleName.contains("USER")) {
+                roles.add(roleService.findByName("ROLE_USER"));
+            }
+
         }
 
         personService.updatePersonWithRoles(person, id, roles);

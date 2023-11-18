@@ -48,6 +48,7 @@ public class PersonServiceImpl implements PersonService {
     @Override
     @Transactional
     public void savePersonWithRoles(Person person, Set<Role> roles) {
+        System.out.println("СРАБОТАЛ СЕРВИС --------------");
         String encodedPassword = passwordEncoder.encode(person.getPassword());
         person.setPassword(encodedPassword);
         Person savedPerson = personRepository.save(person);

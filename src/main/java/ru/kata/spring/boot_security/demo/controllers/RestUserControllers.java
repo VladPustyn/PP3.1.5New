@@ -14,7 +14,7 @@ import ru.kata.spring.boot_security.demo.service.PersonService;
 import java.security.Principal;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/api/user")
 public class RestUserControllers {
     @Autowired
     PersonService personService;

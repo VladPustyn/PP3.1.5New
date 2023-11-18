@@ -17,7 +17,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/admin")
+@RequestMapping("/api/admin")
 public class RestAdminControllers {
     @Autowired
     private UserDetailsService userDetailsService;

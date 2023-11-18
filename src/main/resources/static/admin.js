@@ -1,6 +1,6 @@
 //получение имени пользователя и его ролей
 function fetchUserInfo() {
-    fetch('admin/role') // Запрос информации о ролях пользователя
+    fetch('/api/admin/role') // Запрос информации о ролях пользователя
         .then(response => response.json())
         .then(data => {
             const navbar = document.querySelector('.navbar');
@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 function fillUserTable() {
-    fetch('/admin/users')
+    fetch('/api/admin/users')
         .then(response => response.json())
         .then(data => {
             const userTableBody = document.getElementById('userTableBody');
@@ -90,7 +90,7 @@ document.addEventListener('DOMContentLoaded', function () {
         };
 
         try {
-            const response = await fetch('admin/create', {
+            const response = await fetch('/api/admin/create', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -122,7 +122,7 @@ let currentUserId = null;
 
 function openDeleteModal(userId) {
     // Получение данных пользователя по userId
-    fetch(`/admin/userInfo/${userId}`)
+    fetch(`/api/admin/userInfo/${userId}`)
         .then(response => response.json())
         .then(user => {
             // Заполнение данных модального окна
@@ -153,7 +153,7 @@ function openDeleteModal(userId) {
 function confirmDelete() {
     if (currentUserId) {
         // Отправка DELETE запроса для удаления пользователя
-        fetch(`/admin/delete/${currentUserId}`, {
+        fetch(`/api/admin/delete/${currentUserId}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json'
@@ -190,7 +190,7 @@ let editUserId = null;
 //  открытие модального окна на изменение данных
 function openEditModal(userId) {
     editUserId = userId;
-    fetch(`admin/userInfo/${userId}`)
+    fetch(`/api/admin/userInfo/${userId}`)
         .then(response => response.json())
         .then(user => {
             document.getElementById('username1').value = user.username;
@@ -255,7 +255,7 @@ document.getElementById('updateButton').addEventListener('click', function (even
     };
 
     // Отправка  данных PATCH
-    fetch(`admin/update/${editUserId}`, {
+    fetch(`/api/admin/update/${editUserId}`, {
         method: 'PATCH',
         headers: {
             'Content-Type': 'application/json',
@@ -283,18 +283,18 @@ document.getElementById('updateButton').addEventListener('click', function (even
 document.getElementById('userLink').addEventListener('click', function(event) {
     event.preventDefault();
 
-    fetch('admin/about')
+    fetch('/api/admin/about')
         .then(response => response.text())
         .then(data => {
             const adminPageContainer = document.getElementById('bigContainer');
             adminPageContainer.innerHTML = data;
 
-            fetch('admin/roles') // Получаем роли пользователя
+            fetch('/api/admin/roles') // Получаем роли пользователя
                 .then(response => response.json())
                 .then(roleNames => {
                     const navbar = document.getElementById('navbarAdminUser');
 
-                    fetch('admin/info') // Получаем информацию о пользователе
+                    fetch('/api/admin/info') // Получаем информацию о пользователе
                         .then(response => response.json())
                         .then(person => {
                             const username = person.username; // Получаем имя пользователя
@@ -315,7 +315,7 @@ document.getElementById('userLink').addEventListener('click', function(event) {
                     console.error('Error:', error);
                 });
 
-            fetch('admin/info')
+            fetch('/api/admin/info')
                 .then(response => response.json())
                 .then(person => {
                     let table = document.querySelector('.table-container table tbody');
